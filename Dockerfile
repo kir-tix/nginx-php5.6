@@ -88,7 +88,7 @@ RUN rm -f /etc/nginx/sites-enabled/default && \
 
 #install postfix
 RUN apt-get update
-RUN apt-get install postfix
+RUN apt-get install -y postfix
 RUN mkfifo /var/spool/postfix/public/pickup
 RUN service postfix restart
 	
