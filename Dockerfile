@@ -90,7 +90,7 @@ RUN rm -f /etc/nginx/sites-enabled/default && \
 RUN apt-get update
 RUN apt-get install -y postfix
 RUN mkfifo /var/spool/postfix/public/pickup
-RUN service postfix restart
+RUN service postfix start
 	
 # Expose Ports
 EXPOSE 80
