@@ -86,6 +86,11 @@ RUN rm -f /etc/nginx/sites-enabled/default && \
 	touch /var/log/cron.log && \
 	touch /etc/cron.d/crontasks
 
+#install postfix
+RUN apt-get install postfix
+RUN mkfifo /var/spool/postfix/public/pickup
+RUN service postfix restart
+	
 # Expose Ports
 EXPOSE 80
 
