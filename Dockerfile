@@ -23,7 +23,7 @@ RUN apt-get update && \
 	add-apt-repository ppa:ondrej/php && \
 	apt-get update && \
 	apt-get upgrade -y && \
-	BUILD_PACKAGES="supervisor nginx php5.6-fpm git php5.6-mysql php5.6-zip php5.6-json php-apc php5.6-curl php5.6-gd php5.6-intl php5.6-mcrypt php5.6-mbstring php5.6-memcache php5.6-memcached php5.6-sqlite php5.6-tidy php5.6-xmlrpc php5.6-xsl php5.6-pgsql php5.6-mongo php5.6-ldap pwgen php5.6-cli curl memcached ssmtp" && \
+	BUILD_PACKAGES="zip supervisor nginx php5.6-fpm git php5.6-mysql php5.6-zip php5.6-json php-apc php5.6-curl php5.6-gd php5.6-intl php5.6-mcrypt php5.6-mbstring php5.6-memcache php5.6-memcached php5.6-sqlite php5.6-tidy php5.6-xmlrpc php5.6-xsl php5.6-pgsql php5.6-mongo php5.6-ldap pwgen php5.6-cli curl memcached ssmtp" && \
 	apt-get -y install $BUILD_PACKAGES && \
 	apt-get remove --purge -y software-properties-common && \
 	apt-get autoremove -y && \
@@ -47,6 +47,7 @@ RUN sed -i -e"s/worker_processes  1/worker_processes 5/" /etc/nginx/nginx.conf &
 RUN sed -i -e "s/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/g" /etc/php/5.6/fpm/php.ini && \
 	sed -i -e "s/upload_max_filesize\s*=\s*2M/upload_max_filesize = 100M/g" /etc/php/5.6/fpm/php.ini && \
 	sed -i -e "s/;always_populate_raw_post_data\s*=\s*-1/always_populate_raw_post_data = -1/g" /etc/php/5.6/fpm/php.ini && \
+	sed -i -e "s/memory_limit\s*=\s*128M/memory_limit = 1G/g" /etc/php/5.6/fpm/php.ini && \
 	sed -i -e "s/post_max_size\s*=\s*8M/post_max_size = 100M/g" /etc/php/5.6/fpm/php.ini && \
 	sed -i -e "s/;daemonize\s*=\s*yes/daemonize = no/g" /etc/php/5.6/fpm/php-fpm.conf && \
 	sed -i -e "s/;catch_workers_output\s*=\s*yes/catch_workers_output = yes/g" /etc/php/5.6/fpm/pool.d/www.conf && \
@@ -91,7 +92,7 @@ RUN apt-get update
 RUN apt-get install -y postfix
 RUN mkfifo /var/spool/postfix/public/pickup
 RUN service postfix start
-	
+
 # Expose Ports
 EXPOSE 80
 
