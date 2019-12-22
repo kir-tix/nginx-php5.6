@@ -1,4 +1,4 @@
-FROM ubuntu:14.04.5
+FROM ubuntu:16.04
 
 MAINTAINER Donatas Navidonskis <donatas@navidonskis.com>
 
@@ -7,6 +7,9 @@ ENV DEFAULT_LOCALE=en_US \
 
 # let the container know that there is no tty
 ENV DEBIAN_FRONTEND noninteractive
+
+# install locales
+RUN apt-get clean && apt-get update && apt-get install -y locales && apt-get install -y language-pack-en
 
 # Surpress Upstart errors/warning
 RUN dpkg-divert --local --rename --add /sbin/initctl && \
@@ -20,10 +23,10 @@ RUN apt-get update && \
 	apt-get install -y software-properties-common && \
 	NGINX=stable && \
 	add-apt-repository ppa:nginx/${NGINX_VERSION} && \
-	add-apt-repository ppa:ondrej/php && \
+	LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/php && \
 	apt-get update && \
 	apt-get upgrade -y && \
-	BUILD_PACKAGES="zip supervisor nginx php5.6-fpm git php5.6-mysql php5.6-zip php5.6-json php-apc php5.6-curl php5.6-gd php5.6-intl php5.6-mcrypt php5.6-mbstring php5.6-memcache php5.6-memcached php5.6-sqlite php5.6-tidy php5.6-xmlrpc php5.6-xsl php5.6-pgsql php5.6-mongo php5.6-ldap pwgen php5.6-cli curl memcached ssmtp" && \
+	BUILD_PACKAGES="cron zip supervisor nginx php5.6-fpm git php5.6-mysql php5.6-zip php5.6-json php5.6-apc php5.6-curl php5.6-gd php5.6-intl php5.6-mcrypt php5.6-mbstring php5.6-memcache php5.6-memcached php5.6-sqlite php5.6-tidy php5.6-xmlrpc php5.6-xsl php5.6-pgsql php5.6-mongo php5.6-ldap pwgen php5.6-cli curl memcached ssmtp" && \
 	apt-get -y install $BUILD_PACKAGES && \
 	apt-get remove --purge -y software-properties-common && \
 	apt-get autoremove -y && \
@@ -33,7 +36,7 @@ RUN apt-get update && \
 	rm -rf /var/lib/apt/lists/* && \
 	rm -rf /usr/share/man/?? && \
 	rm -rf /usr/share/man/??_* && \
-	curl -sS https://getcomposer.org/installer | sudo php -- --install-dir=/usr/local/bin --filename=composer && \
+	curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer && \
 	# clean temporary files
 	rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
